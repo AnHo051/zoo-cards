@@ -1,0 +1,72 @@
+@tailwind components;
+
+@layer components {
+  .btn {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(90deg, #e03437 0%, #ce2a31 100%);
+    border-radius: 1.25rem;
+    position: relative;
+    letter-spacing: 0.15rem;
+    font-size: 2rem;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(0);
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: translateY(-0.25rem);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #e03437 0%, #ce2a31 100%);
+      border-radius: 1.25rem;
+      z-index: -1;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #8a1316 0%, #861519 100%);
+      border-radius: 1.25rem;
+      z-index: -1;
+    }
+
+    .btn-shadow-icon {
+      position: absolute;
+      top: -0.15rem;
+      left: 0;
+      width: 35%;
+      height: auto;
+      z-index: 2;
+
+      &.btn-shadow-sm {
+        width: 45%;
+        top: 0.25rem;
+      }
+    }
+  }
+
+  .btn-icon {
+    padding: 1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.5rem;
+
+    &::before {
+      top: 4px;
+      left: 4px;
+    }
+  }
+}

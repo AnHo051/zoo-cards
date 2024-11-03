@@ -1,0 +1,85 @@
+.sun {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  animation: sunRay 40s linear infinite;
+  z-index: 10;
+}
+
+.sun-face {
+  position: relative;
+  z-index: 1;
+  width: 7rem;
+  height: 7rem;
+  background: #fffbd0;
+  border-radius: 50%;
+  box-shadow: 0px 0px 2.5rem 1rem #fffbd0;
+}
+
+.sun-ray {
+  position: absolute;
+  top: 50%;
+  left: 2.5rem;
+  width: 4rem;
+  height: 35rem;
+  clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+  background: red;
+  z-index: -1;
+  opacity: 0.2;
+  transform: rotate(-5deg);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 251, 208, 0) 0%,
+    rgba(255, 251, 208, 0.8) 50%,
+    rgba(255, 251, 208, 0) 100%
+  );
+}
+
+.sun-ray:nth-child(2) {
+  width: 5rem;
+  height: 35rem;
+  left: -10rem;
+  top: 0;
+  transform: rotate(40deg);
+}
+
+.sun-ray:nth-child(3) {
+  width: 8rem;
+  height: 40rem;
+  left: 12rem;
+  top: -4rem;
+  transform: rotate(-45deg);
+}
+
+.sun-ray:nth-child(4) {
+  width: 10rem;
+  height: 50rem;
+  left: 0;
+  top: 0;
+  transform: rotate(90deg) translate(-210%, 50%);
+}
+
+.sun-ray:nth-child(5) {
+  width: 6rem;
+  height: 40rem;
+  left: 0;
+  top: 0;
+  transform: rotate(140deg) translate(-180%, 80%);
+}
+
+.sun-ray:nth-child(6) {
+  width: 8rem;
+  height: 40rem;
+  left: 0;
+  top: 0;
+  transform: rotate(220deg) translate(130%, 80%);
+}
+
+@keyframes sunRay {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

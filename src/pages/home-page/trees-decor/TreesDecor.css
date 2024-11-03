@@ -1,0 +1,114 @@
+#tree-1-circle,
+#tree-3-circle-1,
+#tree-3-circle-2,
+#tree-2-circle-1,
+#tree-2-circle-2,
+#tree-3-circle-3,
+#tree-3-branch-2,
+#grass-1,
+#grass-2-item-1,
+#grass-2-item-2,
+#grass-2-item-3 {
+  transform-origin: bottom;
+  transform-box: fill-box;
+}
+
+#tree-2-circle-1,
+#tree-3-circle-1,
+#tree-3-circle-3 {
+  animation: treeCircleMove1 5s infinite linear;
+}
+
+#tree-3-circle-2 {
+  animation: treeCircleMove2 5s infinite linear;
+}
+
+#tree-3-branch-2,
+#tree-2-circle-2,
+#tree-1-circle {
+  animation: BrachMove 5s infinite linear;
+}
+
+#grass-1,
+#grass-2-item-2,
+#grass-2-item-1,
+#grass-2-item-3 {
+  animation: grassMove 5s infinite linear;
+}
+
+#grass-2-item-2,
+#tree-2-circle-2 {
+  animation-direction: reverse;
+}
+
+@keyframes grassMove {
+  0% {
+    transform: skew(0deg);
+  }
+
+  25% {
+    transform: skew(4deg);
+  }
+
+  50% {
+    transform: skew(0deg);
+  }
+
+  75% {
+    transform: skew(-4deg);
+  }
+}
+
+@keyframes BrachMove {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(4deg);
+  }
+
+  50% {
+    transform: rotate(0deg);
+  }
+
+  75% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes treeCircleMove1 {
+  0% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(3deg);
+  }
+
+  50% {
+    transform: rotate(0deg);
+  }
+
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes treeCircleMove2 {
+  0% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(-5deg);
+  }
+
+  50% {
+    transform: rotate(0);
+  }
+
+  75% {
+    transform: rotate(5deg);
+  }
+}
