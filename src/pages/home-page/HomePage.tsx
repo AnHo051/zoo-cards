@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import HomeBg from "../../images/home-bg.jpg";
 import gsap from "gsap";
-import Button from "../../components/button/Button";
 import { useGSAP } from "@gsap/react";
 import styles from "./HomePage.module.css";
 import TreesDecor from "./trees-decor/TreesDecor";
 import AnimalsDecor from "./animals-decor/AnimalsDecor";
+import BannerContent from "./banner-content/BannerContent";
 
 gsap.registerPlugin(SplitText);
 
@@ -47,7 +47,7 @@ export default function HomePage() {
     >
       <img
         src={HomeBg}
-        alt="home-bg"
+        alt="home bg"
         className="absolute h-full w-full object-cover object-bottom"
       />
 
@@ -59,18 +59,11 @@ export default function HomePage() {
         ))}
       </div>
 
+      <BannerContent />
+
       <TreesDecor />
 
       <AnimalsDecor />
-
-      <div className="relative z-1 h-1/2 flex items-center justify-start gap-[15vh] flex-col">
-        <h1 className="font-title text-8xl" id="game-title">
-          ZOO CARDS
-        </h1>
-        <div>
-          <Button className="animate-bounce btn-play">Start Game</Button>
-        </div>
-      </div>
     </div>
   );
 }

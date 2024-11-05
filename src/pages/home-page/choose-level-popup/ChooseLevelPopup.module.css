@@ -1,0 +1,9 @@
+.popup-content {
+  position: relative;
+  width: 60vw;
+  height: 33.75vw;
+  background-color: #151515;
+  border-radius: 2rem;
+  border: 0.5rem solid #8a1316;
+  overflow: hidden;
+}

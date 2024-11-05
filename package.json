@@ -13,6 +13,7 @@
     "@types/react-dom": "^18.3.1",
     "classnames": "^2.5.1",
     "gsap": "^3.12.5",
+    "jotai": "^2.10.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
