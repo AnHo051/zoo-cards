@@ -1,16 +1,17 @@
 import Button from "../../../components/button/Button";
 import { ReactComponent as CloseIcon } from "../../../images/close.svg";
-import { ReactComponent as Penguin } from "../../../images/penguin.svg";
-import { ReactComponent as Elk } from "../../../images/elk.svg";
-import { ReactComponent as Lion } from "../../../images/lion.svg";
+
 import PopupBg from "../../../images/popup-bg.jpg";
 import styles from "./ChooseLevelPopup.module.css";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import classNames from "classnames";
-import { atom, useAtomValue, useSetAtom } from "jotai";
+import { atom, useAtom, useAtomValue } from "jotai";
+import { ReactComponent as BackIcon } from "../../../images/back.svg";
+import GameRule from "../game-rule/GameRule";
+import ChooseLevelContent from "./ChooseLevelContent";
 
-const levelAtom = atom<string | undefined>();
+const levelAtom = atom<string>("");
 export const useLevelValue = () => useAtomValue(levelAtom);
 
 interface ChooseLevelPopupProps {
@@ -18,13 +19,26 @@ interface ChooseLevelPopupProps {
   onClose: () => void;
 }
 
-export const LEVEL = ["NEWBIE", "INTERMEDIATE", "EXPERT"];
-
 export default function ChooseLevelPopup({
   open,
   onClose,
 }: ChooseLevelPopupProps) {
-  const setLevel = useSetAtom(levelAtom);
+  const [level, setLevel] = useAtom(levelAtom);
+
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        "#popup-content",
+        {
+          opacity: 0,
+          scale: 0.5,
+          duration: 0.3,
+        },
+        { duration: 0.3, opacity: 1, scale: 1 }
+      );
+    },
+    { dependencies: [open] }
+  );
 
   useGSAP(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -51,22 +65,17 @@ export default function ChooseLevelPopup({
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  });
+
+  if (!open) return null;
 
   return (
     <div
       className={classNames(
-        "fixed top-0 left-0 w-full h-full bg-black/80 z-50 flex items-center pointer-events-none justify-center opacity-0",
-        { "opacity-100 pointer-events-auto": open }
+        "fixed top-0 left-0 w-full h-full bg-black/80 z-50 flex items-center justify-center"
       )}
     >
-      <div
-        className={classNames(
-          styles["popup-content"],
-          "scale-0 opacity-0 transition-transform delay-100 duration-200",
-          { "scale-100 opacity-100": open }
-        )}
-      >
+      <div id="popup-content" className={styles["popup-content"]}>
         <div className="absolute h-full w-full top-0 left-0 bg-black/20 z-2"></div>
         <img
           src={PopupBg}
@@ -77,46 +86,31 @@ export default function ChooseLevelPopup({
           <Button
             variant="icon"
             className={styles["btn-close"]}
-            onClick={() => onClose()}
+            onClick={() => {
+              onClose();
+              setLevel("");
+            }}
           >
             <CloseIcon />
           </Button>
         </div>
-        <div className="flex w-full pt-16 3xl:pt-24 pb-10 px-10 flex-col gap-16 3xl:gap-24 items-center h-full relative z-4">
-          <h2 className="font-title text-[2.75rem] 3xl:text-6xl">
-            CHOOSE YOUR LEVEL
-          </h2>
 
-          <div className="w-full flex items-center justify-evenly">
-            <div
-              onClick={() => setLevel(LEVEL[0])}
-              className="w-[27%] cursor-pointer hover:scale-110 transition-transform py-5 px-2 gap-3 border-primary-600 bg-white rounded-3xl border-8 flex flex-col items-center justify-between"
-            >
-              <Penguin className="w-1/2 h-auto" />
-              <div className="text-2xl 3xl:text-4xl font-button">
-                {LEVEL[0]}
-              </div>
+        {level ? (
+          <>
+            <div className="absolute top-3 left-4 3xl:top-4 3xl:left-5 z-6">
+              <Button
+                variant="icon"
+                className={styles["btn-close"]}
+                onClick={() => setLevel("")}
+              >
+                <BackIcon />
+              </Button>
             </div>
-            <div
-              onClick={() => setLevel(LEVEL[1])}
-              className="w-[27%] cursor-pointer hover:scale-110 transition-transform py-5 px-2 gap-3 border-primary-600 bg-white rounded-3xl border-8 flex flex-col items-center justify-between"
-            >
-              <Elk className="w-1/2 h-auto" />
-              <div className="text-2xl 3xl:text-4xl font-button">
-                {LEVEL[1]}
-              </div>
-            </div>
-            <div
-              onClick={() => setLevel(LEVEL[2])}
-              className="w-[27%] cursor-pointer hover:scale-110 transition-transform py-5 px-2 gap-3 border-primary-600 bg-white rounded-3xl border-8 flex flex-col items-center justify-between"
-            >
-              <Lion className="w-1/2 h-auto ml-3" />
-              <div className="text-2xl 3xl:text-4xl font-button">
-                {LEVEL[2]}
-              </div>
-            </div>
-          </div>
-        </div>
+            <GameRule />
+          </>
+        ) : (
+          <ChooseLevelContent setLevel={setLevel} />
+        )}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import styles from "./StickyButtons.module.css";
 
 export default function SticktButtons() {
   return (
-    <div className="fixed bottom-20 right-10 flex flex-col gap-5">
+    <div className="fixed bottom-20 right-10 z-50 flex flex-col gap-5">
       <Button variant="icon" className={styles["btn"]}>
         <SoundIcon className="w-12" />
       </Button>

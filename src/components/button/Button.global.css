@@ -2,18 +2,23 @@
 
 @layer components {
   .btn {
-    padding: 1rem 1.5rem;
     background: linear-gradient(90deg, #e03437 0%, #ce2a31 100%);
     border-radius: 1.25rem;
     position: relative;
     letter-spacing: 0.15rem;
-    font-size: 2rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1.75rem;
     z-index: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     transform: translateY(0);
     transition: transform 0.2s ease-in-out;
+
+    @screen 3xl {
+      font-size: 2rem;
+      padding: 1rem 1.5rem;
+    }
 
     &:hover {
       transform: translateY(-0.25rem);

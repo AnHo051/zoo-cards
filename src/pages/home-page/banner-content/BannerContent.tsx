@@ -15,7 +15,7 @@ export default function BannerContent() {
           className="animate-bounce btn-play"
           onClick={() => setOpenChooseLevel(true)}
         >
-          Start Game
+          Play Now!
         </Button>
       </div>
       <ChooseLevelPopup
