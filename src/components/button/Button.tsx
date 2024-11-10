@@ -1,6 +1,6 @@
 import React from "react";
-import { ReactComponent as ShadowIcon } from "../../images/button-shadow-lg.svg";
-import { ReactComponent as ShadowIconSm } from "../../images/button-shadow-sm.svg";
+import { ReactComponent as ShadowIcon } from "../../images/icons/button-shadow-lg.svg";
+import { ReactComponent as ShadowIconSm } from "../../images/icons/button-shadow-sm.svg";
 import "./Button.global.css";
 import classNames from "classnames";
 

@@ -1,8 +1,8 @@
-import { ReactComponent as Tree1 } from "../../../images/tree-1.svg";
-import { ReactComponent as Tree2 } from "../../../images/tree-2.svg";
-import { ReactComponent as Tree3 } from "../../../images/tree-3.svg";
-import { ReactComponent as Grass1 } from "../../../images/grass-1.svg";
-import { ReactComponent as Grass2 } from "../../../images/grass-2.svg";
+import { ReactComponent as Tree1 } from "../../../images/banner/tree-1.svg";
+import { ReactComponent as Tree2 } from "../../../images/banner/tree-2.svg";
+import { ReactComponent as Tree3 } from "../../../images/banner/tree-3.svg";
+import { ReactComponent as Grass1 } from "../../../images/banner/grass-1.svg";
+import { ReactComponent as Grass2 } from "../../../images/banner/grass-2.svg";
 
 import "./TreesDecor.css";
 

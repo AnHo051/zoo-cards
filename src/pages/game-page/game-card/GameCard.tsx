@@ -1,5 +1,5 @@
 import styles from "./GameCard.module.css";
-import CardFront from "../../../images/card-back.jpg";
+import CardFront from "../../../images/game-data/card.jpg";
 import classNames from "classnames";
 
 export interface GameCardDataType {

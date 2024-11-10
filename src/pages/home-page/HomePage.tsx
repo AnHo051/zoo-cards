@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import HomeBg from "../../images/home-bg.jpg";
+import HomeBg from "../../images/banner/home-bg.jpg";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import styles from "./HomePage.module.css";

@@ -9,8 +9,8 @@ function App() {
 
   return (
     <div className="w-full overflow-hidden">
-      <GamePage />
-      {/* <HomePage /> */}
+      {/* <GamePage /> */}
+      <HomePage />
       <SticktButtons />
     </div>
   );

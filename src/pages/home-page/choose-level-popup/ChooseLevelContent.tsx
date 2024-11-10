@@ -1,9 +1,8 @@
-import { ReactComponent as Penguin } from "../../../images/penguin.svg";
-import { ReactComponent as Elk } from "../../../images/elk.svg";
-import { ReactComponent as Lion } from "../../../images/lion.svg";
+import { ReactComponent as Penguin } from "../../../images/banner/penguin.svg";
+import { ReactComponent as Elk } from "../../../images/banner/elk.svg";
+import { ReactComponent as Lion } from "../../../images/banner/lion.svg";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
 
 gsap.registerPlugin(SplitText);
 

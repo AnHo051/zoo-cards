@@ -1,5 +1,5 @@
 import { atom, useAtomValue } from "jotai";
-import GameBg from "../../images/home-bg.jpg";
+import GameBg from "../../images/banner/home-bg.jpg";
 
 import styles from "./GamePage.module.css";
 import { GameData } from "../../data/GameData";

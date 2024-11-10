@@ -1,6 +1,6 @@
 import Button from "../button/Button";
-import { ReactComponent as SoundIcon } from "../../images/sound.svg";
-import { ReactComponent as SettingIcon } from "../../images/setting.svg";
+import { ReactComponent as SoundIcon } from "../../images/icons/sound.svg";
+import { ReactComponent as SettingIcon } from "../../images/icons/setting.svg";
 
 import styles from "./StickyButtons.module.css";
 

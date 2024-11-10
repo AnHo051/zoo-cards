@@ -1,13 +1,13 @@
 import Button from "../../../components/button/Button";
-import { ReactComponent as CloseIcon } from "../../../images/close.svg";
+import { ReactComponent as CloseIcon } from "../../../images/icons/close.svg";
 
-import PopupBg from "../../../images/popup-bg.jpg";
+import PopupBg from "../../../images/banner/popup-bg.jpg";
 import styles from "./ChooseLevelPopup.module.css";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import classNames from "classnames";
 import { atom, useAtom, useAtomValue } from "jotai";
-import { ReactComponent as BackIcon } from "../../../images/back.svg";
+import { ReactComponent as BackIcon } from "../../../images/icons/back.svg";
 import GameRule from "../game-rule/GameRule";
 import ChooseLevelContent from "./ChooseLevelContent";
 
