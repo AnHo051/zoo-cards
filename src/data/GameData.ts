@@ -42,7 +42,7 @@ import Lion from "../images/game-data/lion-svgrepo-com.jpg";
 import Penguin from "../images/game-data/penguin-svgrepo-com.jpg";
 import { GameCardDataType } from "../pages/game-page/game-card/GameCard";
 
-export const GameData: GameCardDataType[] = [
+export const GAME_DATA: GameCardDataType[] = [
   {
     id: 1,
     img: Tiger1,

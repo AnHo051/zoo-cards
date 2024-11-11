@@ -1,18 +1,22 @@
 import Button from "../../../components/button/Button";
-import { ReactComponent as CloseIcon } from "../../../images/icons/close.svg";
 
-import PopupBg from "../../../images/banner/popup-bg.jpg";
-import styles from "./ChooseLevelPopup.module.css";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import classNames from "classnames";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ReactComponent as BackIcon } from "../../../images/icons/back.svg";
 import GameRule from "../game-rule/GameRule";
 import ChooseLevelContent from "./ChooseLevelContent";
+import { GameCardDataType } from "../../game-page/game-card/GameCard";
+import { useEffect } from "react";
+import { pickRandomCards } from "../../../utils/functions";
+import { GameLevel } from "../../game-page/GamePage";
+import Popup from "../../../components/popup/Popup";
 
-const levelAtom = atom<string>("");
+export const levelAtom = atom<GameLevel | null>(null);
 export const useLevelValue = () => useAtomValue(levelAtom);
+
+export const gameDataAtome = atom<GameCardDataType[]>([]);
+export const useGameDataValue = () => useAtomValue(gameDataAtome);
 
 interface ChooseLevelPopupProps {
   open: boolean;
@@ -24,21 +28,14 @@ export default function ChooseLevelPopup({
   onClose,
 }: ChooseLevelPopupProps) {
   const [level, setLevel] = useAtom(levelAtom);
+  const setGameData = useSetAtom(gameDataAtome);
 
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        "#popup-content",
-        {
-          opacity: 0,
-          scale: 0.5,
-          duration: 0.3,
-        },
-        { duration: 0.3, opacity: 1, scale: 1 }
-      );
-    },
-    { dependencies: [open] }
-  );
+  useEffect(() => {
+    if (level) {
+      const data = pickRandomCards(level);
+      setGameData(data);
+    }
+  }, [level]);
 
   useGSAP(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -70,48 +67,25 @@ export default function ChooseLevelPopup({
   if (!open) return null;
 
   return (
-    <div
-      className={classNames(
-        "fixed top-0 left-0 w-full h-full bg-black/80 z-50 flex items-center justify-center"
-      )}
+    <Popup
+      open={open}
+      onClose={() => {
+        onClose();
+        setLevel(null);
+      }}
     >
-      <div id="popup-content" className={styles["popup-content"]}>
-        <div className="absolute h-full w-full top-0 left-0 bg-black/20 z-2"></div>
-        <img
-          src={PopupBg}
-          alt="popup bg"
-          className="absolute h-full w-full top-0 left-0 object-cover object-bottom z-1"
-        />
-        <div className="absolute top-3 right-4 3xl:top-4 3xl:right-5 z-6">
-          <Button
-            variant="icon"
-            className={styles["btn-close"]}
-            onClick={() => {
-              onClose();
-              setLevel("");
-            }}
-          >
-            <CloseIcon />
-          </Button>
-        </div>
-
-        {level ? (
-          <>
-            <div className="absolute top-3 left-4 3xl:top-4 3xl:left-5 z-6">
-              <Button
-                variant="icon"
-                className={styles["btn-close"]}
-                onClick={() => setLevel("")}
-              >
-                <BackIcon />
-              </Button>
-            </div>
-            <GameRule />
-          </>
-        ) : (
-          <ChooseLevelContent setLevel={setLevel} />
-        )}
-      </div>
-    </div>
+      {level ? (
+        <>
+          <div className="absolute top-3 left-4 3xl:top-4 3xl:left-5 z-6">
+            <Button variant="icon" onClick={() => setLevel(null)}>
+              <BackIcon />
+            </Button>
+          </div>
+          <GameRule onClose={onClose} />
+        </>
+      ) : (
+        <ChooseLevelContent />
+      )}
+    </Popup>
   );
 }

@@ -3,16 +3,29 @@ import { ReactComponent as Elk } from "../../../images/banner/elk.svg";
 import { ReactComponent as Lion } from "../../../images/banner/lion.svg";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useSetAtom } from "jotai";
+import { levelAtom } from "./ChooseLevelPopup";
+import { GameLevel } from "../../game-page/GamePage";
 
 gsap.registerPlugin(SplitText);
 
-export const LEVEL = ["NEWBIE", "INTERMEDIATE", "EXPERT"];
-
-interface ChooseLevelContentProps {
-  setLevel: (level: string) => void;
+interface GameLevelDataType {
+  id: GameLevel;
+  name: string;
+  bonusPoint: number;
 }
+
+export const LEVEL: GameLevelDataType[] = [
+  { id: "easy", name: "NEWBIE", bonusPoint: 0 },
+  { id: "medium", name: "INTERMEDIATE", bonusPoint: 50 },
+  { id: "hard", name: "EXPERT", bonusPoint: 100 },
+];
+
+interface ChooseLevelContentProps {}
 let runAimation = true;
 export default function ChooseLevelContent(props: ChooseLevelContentProps) {
+  const setLevel = useSetAtom(levelAtom);
+
   useGSAP(() => {
     if (runAimation) {
       const splitTitle = new SplitText("#choose-level-title", {
@@ -49,25 +62,31 @@ export default function ChooseLevelContent(props: ChooseLevelContentProps) {
         className="w-full flex items-center justify-evenly"
       >
         <div
-          onClick={() => props.setLevel(LEVEL[0])}
+          onClick={() => setLevel(LEVEL[0].id)}
           className="w-[27%] cursor-pointer hover:scale-110 transition-transform py-5 px-2 gap-3 border-primary-600 bg-white rounded-3xl border-8 flex flex-col items-center justify-between"
         >
           <Penguin className="w-1/2 h-auto" />
-          <div className="text-2xl 3xl:text-4xl font-button">{LEVEL[0]}</div>
+          <div className="text-2xl 3xl:text-4xl font-button">
+            {LEVEL[0].name}
+          </div>
         </div>
         <div
-          onClick={() => props.setLevel(LEVEL[1])}
+          onClick={() => setLevel(LEVEL[1].id)}
           className="w-[27%] cursor-pointer hover:scale-110 transition-transform py-5 px-2 gap-3 border-primary-600 bg-white rounded-3xl border-8 flex flex-col items-center justify-between"
         >
           <Elk className="w-1/2 h-auto" />
-          <div className="text-2xl 3xl:text-4xl font-button">{LEVEL[1]}</div>
+          <div className="text-2xl 3xl:text-4xl font-button">
+            {LEVEL[1].name}
+          </div>
         </div>
         <div
-          onClick={() => props.setLevel(LEVEL[2])}
+          onClick={() => setLevel(LEVEL[2].id)}
           className="w-[27%] cursor-pointer hover:scale-110 transition-transform py-5 px-2 gap-3 border-primary-600 bg-white rounded-3xl border-8 flex flex-col items-center justify-between"
         >
           <Lion className="w-1/2 h-auto ml-3" />
-          <div className="text-2xl 3xl:text-4xl font-button">{LEVEL[2]}</div>
+          <div className="text-2xl 3xl:text-4xl font-button">
+            {LEVEL[2].name}
+          </div>
         </div>
       </div>
     </div>

@@ -9,35 +9,42 @@ import BannerContent from "./banner-content/BannerContent";
 
 gsap.registerPlugin(SplitText);
 
+let runAnimation = true;
+
 export default function HomePage() {
   const rootRef = useRef(null);
 
   useGSAP(() => {
-    var split = new SplitText("#game-title", { type: "chars" });
+    if (runAnimation) {
+      var split = new SplitText("#game-title", { type: "chars" });
 
-    const timline = gsap.timeline({ ease: "power2.inOut" });
-    timline
-      .from("#sun", {
-        duration: 1.5,
-        top: 100,
-        autoAlpha: 0,
-      })
-      .from(
-        split.chars,
-        {
-          duration: 1,
+      const timline = gsap.timeline({ ease: "power2.inOut" });
+      timline
+        .from("#sun", {
+          duration: 1.5,
+          top: 100,
+          autoAlpha: 0,
+        })
+        .from(
+          split.chars,
+          {
+            duration: 1,
+            y: 70,
+            autoAlpha: 0,
+            stagger: 0.05,
+            scale: 0.5,
+          },
+          "=-0.75"
+        )
+        .from(".btn-play", {
+          duration: 0.5,
           y: 70,
           autoAlpha: 0,
-          stagger: 0.05,
-          scale: 0.5,
-        },
-        "=-0.75"
-      )
-      .from(".btn-play", {
-        duration: 0.5,
-        y: 70,
-        autoAlpha: 0,
-      });
+          onComplete: () => {
+            runAnimation = false;
+          },
+        });
+    }
   }, [{ container: rootRef.current }]);
 
   return (

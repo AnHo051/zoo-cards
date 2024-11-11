@@ -1,61 +1,94 @@
-import { atom, useAtomValue } from "jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import GameBg from "../../images/banner/home-bg.jpg";
+import { ReactComponent as HomeIcon } from "../../images/icons/home.svg";
 
 import styles from "./GamePage.module.css";
-import { GameData } from "../../data/GameData";
-import GameCard, { GameCardDataType } from "./game-card/GameCard";
-import { useEffect, useMemo, useState } from "react";
+import GameCard from "./game-card/GameCard";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
+import GameInfo, { endGameAtom, useTimeSpendValue } from "./game-info/GameInfo";
+import {
+  gameDataAtome,
+  levelAtom,
+} from "../home-page/choose-level-popup/ChooseLevelPopup";
+import {
+  findBestResult,
+  formatTime,
+  getTimePointBonus,
+  pickRandomCards,
+} from "../../utils/functions";
+import Popup from "../../components/popup/Popup";
+import Button from "../../components/button/Button";
+import { LEVEL } from "../home-page/choose-level-popup/ChooseLevelContent";
 
 export const startGameAtom = atom<boolean>(false);
 
 export const useStartGameValue = () => useAtomValue(startGameAtom);
 
-type GameLevel = "easy" | "medium" | "hard";
-
-export const pickRandomCards = (data: GameCardDataType[], level: GameLevel) => {
-  if (level === "easy") {
-    const cards = data.filter((card) => card.ranking === level);
-    const randomCards = cards.sort(() => Math.random() - 0.5).slice(0, 8);
-    return [...randomCards, ...randomCards].sort(() => Math.random() - 0.5);
-  }
-  const randomCate = ["tiger", "rabbit"][Math.floor(Math.random() * 2)];
-  if (level === "medium") {
-    // pick random 4 cards hard with the same category, and 4 cards easy.
-    const hardCards = data
-      .filter((card) => card.category === randomCate)
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 4);
-    const easyCards = data
-      .filter((card) => card.ranking === "easy")
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 4);
-    const randomCards = [...hardCards, ...easyCards];
-    return [...randomCards, ...randomCards].sort(() => Math.random() - 0.5);
-  }
-
-  // pick 8 card hard with the same category.
-  const hardCards = data
-    .filter((card) => card.category === randomCate)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 8);
-  return [...hardCards, ...hardCards].sort(() => Math.random() - 0.5);
-};
-const gameLevel: GameLevel = "easy";
+export type GameLevel = "easy" | "medium" | "hard";
 
 export default function GamePage() {
   const [activeCards, setActiveCards] = useState<number[]>([]);
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
-  const [unMatches, setUnMatched] = useState<boolean>();
-  const data = useMemo(() => {
-    return pickRandomCards(GameData, gameLevel);
-  }, [gameLevel]);
+  const [gameScore, setGameScore] = useState<number>(0);
+  const [unMatched, setUnMatched] = useState<boolean>();
+  const setStartGame = useSetAtom(startGameAtom);
+  const [data, setData] = useAtom(gameDataAtome);
+  const [endGame, setEndGame] = useAtom(endGameAtom);
+  const [level, setLevel] = useAtom(levelAtom);
+  const [runningTime, setRunningTime] = useState(true);
+  const [newRecord, setNewRecord] = useState(false);
+  const timeSpend = useTimeSpendValue();
+  const levelIdx = LEVEL.findIndex((item) => item.id === level);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (matchedCards.length === data.length) {
+      const levelPoint =
+        LEVEL.find((item) => item.id === level)?.bonusPoint || 0;
+      const timePoint = getTimePointBonus(timeSpend);
+      const totalScore = gameScore + levelPoint + timePoint;
+      setGameScore(totalScore);
+
+      const scoreList = JSON.parse(localStorage.getItem("gameScore") || "[]");
+
+      if (scoreList.length === 0) setNewRecord(true);
+
+      if (scoreList.length > 0) {
+        const result = findBestResult(scoreList);
+
+        if (
+          (result?.score === totalScore && result?.time > timeSpend) ||
+          result?.score! < totalScore
+        )
+          setNewRecord(true);
+      } else {
+        setNewRecord(false);
+      }
+
+      localStorage.setItem(
+        "gameScore",
+        JSON.stringify([...scoreList, { score: totalScore, time: timeSpend }])
+      );
+
+      timeout = setTimeout(() => {
+        setEndGame("win");
+      }, 1000);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [matchedCards]);
+
+  useEffect(() => {
+    setRunningTime(!endGame);
+  }, [endGame]);
 
   useEffect(() => {
     if (activeCards.length < 2) return;
 
     if (data[activeCards[0]].id === data[activeCards[1]].id) {
       setMatchedCards([...matchedCards, ...activeCards]);
+      setGameScore((prev) => prev + 10);
     } else {
       setUnMatched(true);
       setTimeout(() => {
@@ -78,6 +111,31 @@ export default function GamePage() {
     }
   };
 
+  const reset = () => {
+    setEndGame("");
+    setMatchedCards([]);
+    setActiveCards([]);
+    setGameScore(0);
+  };
+
+  const handlePlayAgain = () => {
+    reset();
+    setData(pickRandomCards(level!));
+  };
+
+  const handleBackHome = () => {
+    setStartGame(false);
+    setLevel(null);
+    reset();
+  };
+
+  const handleChangeLevel = () => {
+    reset();
+    const nextLevel = LEVEL[levelIdx + 1]?.id || LEVEL[0].id;
+    setLevel(nextLevel);
+    setData(pickRandomCards(nextLevel));
+  };
+
   return (
     <div className="relative w-dvw h-dvh flex flex-col items-center pt-14 pb-12 px-[6%] gap-10">
       <img
@@ -88,14 +146,14 @@ export default function GamePage() {
       <h1 className="font-title text-7xl relative z-2" id="game-title">
         ZOO CARDS
       </h1>
-      <div className="flex items-start w-full h-full relative z-5 gap-[5%]">
-        <div className="w-[70%] overflow-hidden h-full rounded-3xl opacity-0 grid gap-5 grid-cols-4 p-6 bg-blue-300/60 relative z-5">
-          {data.map((card, index) => (
+      <div className="flex items-start w-full h-full relative z-5 gap-[4%]">
+        <div className="w-[70%] overflow-hidden h-full rounded-3xl grid gap-5 grid-cols-4 p-6 bg-blue-300/60 relative z-5">
+          {data?.map((card, index) => (
             <GameCard
               active={activeCards.includes(index)}
               matched={matchedCards.includes(index)}
-              unmatched={!!(unMatches && activeCards.includes(index))}
-              key={card.id}
+              unmatched={!!(unMatched && activeCards.includes(index))}
+              key={index}
               data={card}
               onClick={() => handleSelectCard(index)}
               className={classNames({
@@ -106,25 +164,64 @@ export default function GamePage() {
           ))}
         </div>
         <div className="grow font-bold h-full overflow-hidden">
-          <div className="w-full text-lg flex gap-2.5 flex-col items-center rounded-3xl bg-blue-300/60 text-primary-700 p-6">
-            <div className="text-4xl mb-2 font-black">Game Infomation</div>
-            <div className="flex items-center w-full justify-center gap-10">
-              <div>Score: 0</div>
-              <div>Level: easy</div>
-            </div>
-
-            <div>Time remaining: 00:00</div>
-            <div>Attempts Left: tym tym</div>
-          </div>
-          <div className="w-full text-lg flex gap-2.5 flex-col items-center rounded-3xl bg-blue-300/60 text-primary-700 p-6 mt-5">
-            <div className="text-4xl mb-2 font-black">Game Record</div>
-            <div className="flex items-center w-full justify-center gap-10">
-              <div>Best Score: 0</div>
-              <div>Best Time: 00:00</div>
-            </div>
-          </div>
+          <GameInfo
+            runningTime={runningTime}
+            gameScore={gameScore}
+            unMatched={!!unMatched}
+          />
         </div>
       </div>
+
+      <Popup open={!!endGame}>
+        {endGame === "win" ? (
+          <div className="relative z-2 h-full w-full gap-20 text-white p-6 flex flex-col items-center justify-center">
+            <div
+              className="absolute top-3 right-4 3xl:top-4 3xl:right-5 z-6"
+              title="Back to Home"
+            >
+              <Button variant="icon" onClick={handleBackHome}>
+                <HomeIcon />
+              </Button>
+            </div>
+            {newRecord ? (
+              <h1 className="text-5xl font-title 3xl:text-6xl">New Record!</h1>
+            ) : (
+              <h1 className="text-5xl font-title 3xl:text-6xl">
+                Congratulations!
+              </h1>
+            )}
+            <div className="font-bold text-2xl w-4/5 text-center 3xl:text-3xl">
+              <p>You have completed the game in {formatTime(timeSpend)}.</p>
+              <p>
+                Total score is{" "}
+                <span className="text-primary-600 font-extrabold text-3xl">
+                  {gameScore}
+                </span>{" "}
+                points.
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-8">
+              <Button onClick={handlePlayAgain}>Play Again</Button>
+              {levelIdx < LEVEL.length - 1 && (
+                <Button onClick={handleChangeLevel}>Try next level</Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="relative z-2 h-full w-full gap-20 text-white p-6 flex flex-col items-center justify-center">
+            <h1 className="text-6xl font-title">Game Over</h1>
+            <div className="font-bold text-2xl">
+              {endGame === "attempts"
+                ? "You have used all your attempts. Better luck next time!"
+                : "Time's up! Try to be quicker next time."}
+            </div>
+            <div className="flex items-center justify-center gap-8">
+              <Button onClick={handlePlayAgain}>Play Again</Button>
+              <Button onClick={handleBackHome}>Back to Home</Button>
+            </div>
+          </div>
+        )}
+      </Popup>
     </div>
   );
 }

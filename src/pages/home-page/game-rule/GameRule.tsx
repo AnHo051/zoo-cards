@@ -10,7 +10,11 @@ gsap.registerPlugin(SplitText);
 
 let runAimation = true;
 
-export default function GameRule() {
+interface GameRuleProps {
+  onClose: () => void;
+}
+
+export default function GameRule({ onClose }: GameRuleProps) {
   const root = useRef(null);
   const setStartGame = useSetAtom(startGameAtom);
 
@@ -61,21 +65,25 @@ export default function GameRule() {
         className="w-4/5 font-bold text-2xl 3xl:text-3xl text-white [&>p]:py-1.5"
       >
         <p>
-          In Zoo Cards, the player flips two cards at a time to find matching
-          pairs, with a limit of 5 wrong attempts.
+          In Zoo Cards, players flip two cards at a time to find matching pairs,
+          with a maximum of ten mistakes and a time limit of one hour.
         </p>
         <p>
-          Each incorrect match reduces the remaining attempts. The game ends
-          when all pairs are matched or the player reaches the 5-mistake limit.
+          The game ends when all pairs are matched, the mistake limit is
+          reached, or time runs out.
         </p>
         <p>
-          The final score is based on the time taken and remaining attempts.
+          Scores are based on time taken and remaining attempts, rewarding speed
+          and accuracy.
         </p>
       </div>
       <Button
         id="play-button"
         className={styles["play-btn"]}
-        onClick={() => setStartGame(true)}
+        onClick={() => {
+          onClose();
+          setStartGame(true);
+        }}
       >
         Start Game!
       </Button>
