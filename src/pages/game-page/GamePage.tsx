@@ -286,7 +286,7 @@ export default function GamePage() {
         ) : (
           <div className="relative z-2 h-full w-full gap-20 text-black p-6 flex flex-col items-center justify-center">
             <h1 className="text-6xl font-title">Game Over</h1>
-            <div className="font-bold text-3xl">
+            <div className="font-bold text-2xl 3xl:text-3xl">
               {endGame === "attempts"
                 ? "You have used all your attempts. Better luck next time!"
                 : "Time's up! Try to be quicker next time."}
