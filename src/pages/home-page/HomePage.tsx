@@ -10,7 +10,7 @@ import ZooSong from "../../audio/zoo-song.mp3";
 import MusicPopup from "./music-popup/MusicPopup";
 import { atom, useAtom } from "jotai";
 
-gsap.registerPlugin(SplitText);
+// gsap.registerPlugin(SplitText);
 
 let runAnimation = true;
 
@@ -34,7 +34,7 @@ export default function HomePage() {
 
   useGSAP(() => {
     if (runAnimation) {
-      var split = new SplitText("#game-title", { type: "chars" });
+      // var split = new SplitText("#game-title", { type: "chars" });
 
       const timline = gsap.timeline({ ease: "power2.inOut" });
       timline
@@ -43,17 +43,22 @@ export default function HomePage() {
           top: 100,
           autoAlpha: 0,
         })
-        .from(
-          split.chars,
-          {
-            duration: 1,
-            y: 70,
-            autoAlpha: 0,
-            stagger: 0.05,
-            scale: 0.5,
-          },
-          "=-0.75"
-        )
+        .from("#game-title", {
+          duration: 0.5,
+          y: 70,
+          autoAlpha: 0,
+        })
+        // .from(
+        //   split.chars,
+        //   {
+        //     duration: 1,
+        //     y: 70,
+        //     autoAlpha: 0,
+        //     stagger: 0.05,
+        //     scale: 0.5,
+        //   },
+        //   "=-0.75"
+        // )
         .from(".btn-play", {
           duration: 0.5,
           y: 70,

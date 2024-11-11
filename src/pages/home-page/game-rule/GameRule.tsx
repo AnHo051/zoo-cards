@@ -6,7 +6,7 @@ import { useSetAtom } from "jotai";
 import { startGameAtom } from "../../game-page/GamePage";
 import { playMusicAtom } from "../HomePage";
 
-gsap.registerPlugin(SplitText);
+// gsap.registerPlugin(SplitText);
 
 let runAimation = true;
 
@@ -21,21 +21,32 @@ export default function GameRule({ onClose }: GameRuleProps) {
 
   useGSAP(() => {
     if (runAimation) {
-      const splitTitle = new SplitText("#game-title", { type: "chars" });
-      const splitContent = new SplitText("#game-rule", { type: "words" });
+      // const splitTitle = new SplitText("#game-title", { type: "chars" });
+      // const splitContent = new SplitText("#game-rule", { type: "words" });
+
+      // from(splitTitle.chars, {
+      //   duration: 0.3,
+      //   autoAlpha: 0,
+      //   stagger: 0.05,
+      //   scale: 0.5,
+      // })
+      //   .from(splitContent.words, {
+      //     duration: 0.3,
+      //     autoAlpha: 0,
+      //     stagger: 0.03,
+      //   })
 
       const tl = gsap.timeline();
 
-      tl.from(splitTitle.chars, {
-        duration: 0.3,
+      tl.from("#game-title", {
+        duration: 0.5,
         autoAlpha: 0,
-        stagger: 0.05,
-        scale: 0.5,
+        y: 30,
       })
-        .from(splitContent.words, {
-          duration: 0.3,
+        .from("#game-rule", {
+          duration: 0.5,
           autoAlpha: 0,
-          stagger: 0.03,
+          y: 40,
         })
         .fromTo(
           "#play-button",

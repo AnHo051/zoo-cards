@@ -7,7 +7,7 @@ import { useSetAtom } from "jotai";
 import { levelAtom } from "./ChooseLevelPopup";
 import { GameLevel } from "../../game-page/GamePage";
 
-gsap.registerPlugin(SplitText);
+// gsap.registerPlugin(SplitText);
 
 interface GameLevelDataType {
   id: GameLevel;
@@ -28,15 +28,20 @@ export default function ChooseLevelContent(props: ChooseLevelContentProps) {
 
   useGSAP(() => {
     if (runAimation) {
-      const splitTitle = new SplitText("#choose-level-title", {
-        type: "chars",
-      });
+      // const splitTitle = new SplitText("#choose-level-title", {
+      //   type: "chars",
+      // });
+      // from(splitTitle.chars, {
+      //   duration: 0.3,
+      //   autoAlpha: 0,
+      //   stagger: 0.05,
+      //   scale: 0.5,
+      // })
       const tl = gsap.timeline();
-      tl.from(splitTitle.chars, {
-        duration: 0.3,
+      tl.from("#choose-level-title", {
+        duration: 0.5,
         autoAlpha: 0,
-        stagger: 0.05,
-        scale: 0.5,
+        y: 30,
       }).from("#choose-level-item", {
         duration: 0.5,
         autoAlpha: 0,
