@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/zoo-cards/static/css/main.3786789e.css",
-    "main.js": "/zoo-cards/static/js/main.e7120f27.js",
+    "main.css": "/zoo-cards/static/css/main.eda24412.css",
+    "main.js": "/zoo-cards/static/js/main.ccb46b8d.js",
     "static/js/453.53f8dcfc.chunk.js": "/zoo-cards/static/js/453.53f8dcfc.chunk.js",
     "static/media/zoo-song.mp3": "/zoo-cards/static/media/zoo-song.b666036712a4c5d487bf.mp3",
     "static/media/card.jpg": "/zoo-cards/static/media/card.9494c92cb4c16d440cdd.jpg",
@@ -81,12 +81,12 @@
     "static/media/dinosaur-line.svg": "/zoo-cards/static/media/dinosaur-line.9b3769afdaaa71f3e6ab87cd306de612.svg",
     "static/media/zebra-line.svg": "/zoo-cards/static/media/zebra-line.92937e04e444ea81304dbc6f3b1de732.svg",
     "static/media/crab-line.svg": "/zoo-cards/static/media/crab-line.8a58d4afca72310cffa6ff2616cc6c82.svg",
-    "main.3786789e.css.map": "/zoo-cards/static/css/main.3786789e.css.map",
-    "main.e7120f27.js.map": "/zoo-cards/static/js/main.e7120f27.js.map",
+    "main.eda24412.css.map": "/zoo-cards/static/css/main.eda24412.css.map",
+    "main.ccb46b8d.js.map": "/zoo-cards/static/js/main.ccb46b8d.js.map",
     "453.53f8dcfc.chunk.js.map": "/zoo-cards/static/js/453.53f8dcfc.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3786789e.css",
-    "static/js/main.e7120f27.js"
+    "static/css/main.eda24412.css",
+    "static/js/main.ccb46b8d.js"
   ]
 }
