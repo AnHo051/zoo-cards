@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import styles from "./Popup.module.css";
-import PopupBg from "../../images/banner/popup-bg.jpg";
+import PopupBg from "../../images/banner/home-bg.jpg";
 import { ReactComponent as CloseIcon } from "../../images/icons/close.svg";
 import Button from "../button/Button";
 import { gsap } from "gsap";
@@ -43,7 +43,6 @@ export default function Popup({
       )}
     >
       <div id="popup-content" className={styles["popup-content"]}>
-        <div className="absolute h-full w-full top-0 left-0 bg-black/20 z-2"></div>
         <img
           src={PopupBg}
           alt="popup bg"

@@ -7,6 +7,9 @@ import classNames from "classnames";
 import { levelAtom } from "../../home-page/choose-level-popup/ChooseLevelPopup";
 import { LEVEL } from "../../home-page/choose-level-popup/ChooseLevelContent";
 import { findBestResult } from "../../../utils/functions";
+import styles from "./GameInfo.module.css";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 interface GameInfoProps {
   runningTime: boolean;
@@ -44,6 +47,19 @@ export default function GameInfo({
 
   const levelName = LEVEL.find((item) => item.id === level)?.name;
 
+  useGSAP(() => {
+    gsap.fromTo(
+      "#gutan-eye",
+      { scale: 0.9, transformOrigin: "center" },
+      { scale: 1, duration: 1, repeat: -1, yoyo: true }
+    );
+    gsap.fromTo(
+      "#gutan-foots",
+      { rotate: -3, transformOrigin: "bottom", ease: "sine" },
+      { rotate: 3, duration: 1, repeat: -1, yoyo: true }
+    );
+  }, []);
+
   useEffect(() => {
     if (!endGame) {
       const scoreList = JSON.parse(localStorage.getItem("gameScore") || "[]");
@@ -76,7 +92,8 @@ export default function GameInfo({
   }, [runningTime]);
 
   useEffect(() => {
-    if (elapsedTime > 3600) {
+    // max time is 30 minutes
+    if (elapsedTime > 30 * 60) {
       setEndGame("time");
     }
   }, [elapsedTime]);
@@ -140,7 +157,7 @@ export default function GameInfo({
             {formatTime(bestResult?.time || 0)}
           </div>
         </div>
-        <Gutan className="w-2/5 mb-3" />
+        <Gutan className="w-2/5 mb-3 overflow-visible" />
       </div>
     </>
   );

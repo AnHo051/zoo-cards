@@ -1,10 +1,16 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import GameBg from "../../images/banner/home-bg.jpg";
 import { ReactComponent as HomeIcon } from "../../images/icons/home.svg";
+import correctSound from "../../audio/Good.mp3";
+import wrongSound from "../../audio/Quack.mp3";
+import timeoutSound from "../../audio/Fail-Titanic.mp3";
+import failSound from "../../audio/Angels-Singing.mp3";
+import newRecordSound from "../../audio/Wow.mp3";
+import passSound from "../../audio/Yeehaw.mp3";
+import gsap from "gsap";
 
-import styles from "./GamePage.module.css";
 import GameCard from "./game-card/GameCard";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import GameInfo, { endGameAtom, useTimeSpendValue } from "./game-info/GameInfo";
 import {
@@ -20,6 +26,9 @@ import {
 import Popup from "../../components/popup/Popup";
 import Button from "../../components/button/Button";
 import { LEVEL } from "../home-page/choose-level-popup/ChooseLevelContent";
+import { playMusicAtom } from "../home-page/HomePage";
+import { useSoundValue } from "../../components/sticky-buttons/SticktButtons";
+import { useGSAP } from "@gsap/react";
 
 export const startGameAtom = atom<boolean>(false);
 
@@ -40,6 +49,11 @@ export default function GamePage() {
   const [newRecord, setNewRecord] = useState(false);
   const timeSpend = useTimeSpendValue();
   const levelIdx = LEVEL.findIndex((item) => item.id === level);
+  const setPlayMusic = useSetAtom(playMusicAtom);
+  const playSound = useSoundValue();
+
+  const failRef = useRef<HTMLAudioElement>(null);
+  const timeOutRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -81,15 +95,44 @@ export default function GamePage() {
 
   useEffect(() => {
     setRunningTime(!endGame);
+
+    if (playSound) {
+      switch (endGame) {
+        case "time":
+          timeOutRef?.current?.play();
+          break;
+        case "attempts":
+          failRef?.current?.play();
+          break;
+        case "win": {
+          if (newRecord) {
+            new Audio(newRecordSound).play();
+          } else {
+            new Audio(passSound).play();
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    }
   }, [endGame]);
 
   useEffect(() => {
     if (activeCards.length < 2) return;
 
     if (data[activeCards[0]].id === data[activeCards[1]].id) {
+      playSound &&
+        setTimeout(() => {
+          new Audio(correctSound).play();
+        }, 400);
       setMatchedCards([...matchedCards, ...activeCards]);
       setGameScore((prev) => prev + 10);
     } else {
+      playSound &&
+        setTimeout(() => {
+          new Audio(wrongSound).play();
+        }, 400);
       setUnMatched(true);
       setTimeout(() => {
         setUnMatched(false);
@@ -112,6 +155,14 @@ export default function GamePage() {
   };
 
   const reset = () => {
+    if (timeOutRef.current) {
+      timeOutRef.current.pause();
+      timeOutRef.current.currentTime = 0;
+    }
+    if (failRef.current) {
+      failRef.current.pause();
+      failRef.current.currentTime = 0;
+    }
     setEndGame("");
     setMatchedCards([]);
     setActiveCards([]);
@@ -127,6 +178,8 @@ export default function GamePage() {
     setStartGame(false);
     setLevel(null);
     reset();
+    const isAllowPlayMusic = !!localStorage.getItem("playMusic");
+    setPlayMusic(isAllowPlayMusic);
   };
 
   const handleChangeLevel = () => {
@@ -136,11 +189,34 @@ export default function GamePage() {
     setData(pickRandomCards(nextLevel));
   };
 
+  useGSAP(
+    () => {
+      if (data.length > 0) {
+        gsap.fromTo(
+          ".game-card",
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.05,
+            ease: "power2.out",
+            clearProps: "all",
+          }
+        );
+      }
+    },
+    { dependencies: [data] }
+  );
+
   return (
     <div className="relative w-dvw h-dvh flex flex-col items-center pt-14 pb-12 px-[6%] gap-10">
+      <audio ref={failRef} src={failSound} hidden />
+      <audio ref={timeOutRef} src={timeoutSound} hidden />
+
       <img
         src={GameBg}
-        alt="popup bg"
+        alt="game bg"
         className="absolute h-full w-full top-0 left-0 object-cover object-bottom -z-1"
       />
       <h1 className="font-title text-7xl relative z-2" id="game-title">
@@ -156,7 +232,7 @@ export default function GamePage() {
               key={index}
               data={card}
               onClick={() => handleSelectCard(index)}
-              className={classNames({
+              className={classNames("game-card", {
                 "!pointer-events-none":
                   activeCards.length === 2 && !activeCards.includes(index),
               })}
@@ -174,13 +250,13 @@ export default function GamePage() {
 
       <Popup open={!!endGame}>
         {endGame === "win" ? (
-          <div className="relative z-2 h-full w-full gap-20 text-white p-6 flex flex-col items-center justify-center">
+          <div className="relative z-2 h-full w-full gap-20 text-black p-6 flex flex-col items-center justify-center">
             <div
               className="absolute top-3 right-4 3xl:top-4 3xl:right-5 z-6"
               title="Back to Home"
             >
               <Button variant="icon" onClick={handleBackHome}>
-                <HomeIcon />
+                <HomeIcon className="w-14" />
               </Button>
             </div>
             {newRecord ? (
@@ -208,9 +284,9 @@ export default function GamePage() {
             </div>
           </div>
         ) : (
-          <div className="relative z-2 h-full w-full gap-20 text-white p-6 flex flex-col items-center justify-center">
+          <div className="relative z-2 h-full w-full gap-20 text-black p-6 flex flex-col items-center justify-center">
             <h1 className="text-6xl font-title">Game Over</h1>
-            <div className="font-bold text-2xl">
+            <div className="font-bold text-3xl">
               {endGame === "attempts"
                 ? "You have used all your attempts. Better luck next time!"
                 : "Time's up! Try to be quicker next time."}

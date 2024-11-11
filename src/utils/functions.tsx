@@ -23,7 +23,7 @@ const shuffleArray = (array: GameCardDataType[]) => {
   return array;
 };
 
-const TOTAL_CARDS = 2;
+const TOTAL_CARDS = 8;
 
 export const pickRandomCards = (level: GameLevel) => {
   const data = GAME_DATA as GameCardDataType[];

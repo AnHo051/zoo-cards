@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { ReactComponent as Dinasour } from "../../../images/banner/dinosaur.svg";
 import { ReactComponent as DinasourLine } from "../../../images/banner/dinosaur-line.svg";
 import { ReactComponent as Zebra } from "../../../images/banner/zebra.svg";
@@ -13,7 +13,7 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(MotionPathPlugin);
 
-export default function AnimalsDecor() {
+function AnimalsDecor() {
   const refRoot = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -94,7 +94,7 @@ export default function AnimalsDecor() {
             align: "#dinosaur-path",
             alignOrigin: [0.5, 1],
           },
-          duration: 6,
+          duration: 3,
           onComplete: () => {
             gsap.to(["#dinosaur-right-foot", "#dinosaur-left-foot"], {
               rotate: 0,
@@ -204,7 +204,7 @@ export default function AnimalsDecor() {
             autoRotate: true,
             end: 0.9,
           },
-          duration: 4,
+          duration: 3,
           onComplete: () => {
             gsap.to(["#zebra-right-foot", "#zebra-left-foot"], {
               rotate: 0,
@@ -292,7 +292,6 @@ export default function AnimalsDecor() {
             alignOrigin: [0.5, 0.5],
             end: 0.7,
           },
-          delay: 2,
           duration: 4,
           onComplete: () => {
             gsap.to(["#hippo-foot-1", "#hippo-foot-2", "#hippo-foot-3"], {
@@ -514,11 +513,11 @@ export default function AnimalsDecor() {
         },
         ">"
       );
-  }, [{ container: refRoot.current }]);
+  }, []);
 
   return (
     <div
-      className="fixed bottom-0 w-full z-10 z-3 pointer-events-none select-none"
+      className="fixed bottom-0 w-full z-3 pointer-events-none select-none"
       ref={refRoot}
     >
       <DinasourLine className="opacity-0 absolute -bottom-[5vh] w-1/2 -right-[16%]" />
@@ -537,3 +536,5 @@ export default function AnimalsDecor() {
     </div>
   );
 }
+
+export default memo(AnimalsDecor);
